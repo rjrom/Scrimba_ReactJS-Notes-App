@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 import "./App.css";
 export default function App() {
   const [notes, setNotes] = React.useState(
-    JSON.parse(localStorage.getItem("notes")) || []
+    () => JSON.parse(localStorage.getItem("notes")) || []
   );
   const [currentNoteId, setCurrentNoteId] = React.useState(
     (notes[0] && notes[0].id) || null
@@ -16,7 +16,7 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
   });
-  
+
   function createNewNote() {
     const newNote = {
       id: nanoid(),
@@ -36,6 +36,11 @@ export default function App() {
     );
   }
 
+  function deleteNote(currentNoteId) {
+    const updatedNotes = notes.filter((note) => note.id !== currentNoteId);
+    setNotes(updatedNotes);
+  }
+
   function findCurrentNote() {
     return (
       notes.find((note) => {
@@ -53,6 +58,7 @@ export default function App() {
             currentNote={findCurrentNote()}
             setCurrentNoteId={setCurrentNoteId}
             newNote={createNewNote}
+            deleteNote={deleteNote}
           />
           {currentNoteId && notes.length > 0 && (
             <Editor currentNote={findCurrentNote()} updateNote={updateNote} />
