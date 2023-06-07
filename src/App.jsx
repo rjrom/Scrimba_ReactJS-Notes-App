@@ -4,6 +4,8 @@ import Editor from "./components/Editor";
 import Split from "react-split";
 import { nanoid } from "nanoid";
 import "./App.css";
+import { onSnapshot } from "firebase/firestore"
+import { notesCollection } from "./firebase"
 export default function App() {
   const [notes, setNotes] = React.useState(
     () => JSON.parse(localStorage.getItem("notes")) || []
@@ -13,7 +15,10 @@ export default function App() {
   );
 
   useEffect(() => {
-    localStorage.setItem("notes", JSON.stringify(notes));
+    // localStorage.setItem("notes", JSON.stringify(notes));
+    onSnapshot(notesCollection, function(snapshot) {
+
+    })
   });
 
   function createNewNote() {
